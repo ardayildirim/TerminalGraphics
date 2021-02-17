@@ -17,7 +17,7 @@ private:
 	};
 
 	double a; // a = length of any side of the cube.
-	double pointDensity; // there are pointDensity number of points on one side of the cube, it is like resolution or sensitivity
+	int pointDensity; // there are pointDensity number of points on one side of the cube, it is like resolution or sensitivity
 	int screen_width,screen_height;
 	vec3 *** points; // <- 3-star-programmer (https://wiki.c2.com/?ThreeStarProgrammer) who uses std::vector in c++ anyway.
 	void render_frame(double A,double B); //

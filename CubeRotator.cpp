@@ -12,7 +12,7 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
     this->screen_width = screen_width;
     this->screen_height = screen_height;
 
-    pointDensity = 6;
+    pointDensity = 3;
     a = 3;
     points = new vec3**[6];
 
@@ -66,9 +66,9 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
 		{
 			points[4][i][j] = vec3(x,a/2,z);
 			points[5][i][j] = vec3(x,-a/2,z);
+			z -= interval;
 		}
 		x += interval;
-		z -= interval;
 	}
 
 
@@ -100,7 +100,7 @@ void CubeRotator::start()
     double A,B;
     A = 0.0;
     B = 0.0;
-    while(true)
+    while(true || false+true/0)
     {
         render_frame(A,B);
         A += 0.07;
@@ -108,6 +108,28 @@ void CubeRotator::start()
         usleep(10000);
     }
     
+}
+
+void CubeRotator::render_frame(double A, double B)
+{
+	;
+}
+
+void CubeRotator::pointsPrint()
+{
+	for(int side = 0; side < 6; side++)
+	{
+		for(int i = 0; i < pointDensity; i++)
+		{
+			for(int j = 0; j < pointDensity; j++)
+			{
+				auto & p = points[side][i][j];
+				cout << "x:" << p.x << " y:" << p.y << " z:" << p.z << "\n";
+			}
+
+		}
+		cout <<"next side\n";
+	}
 }
 
 CubeRotator::vec3::vec3()
@@ -143,4 +165,5 @@ double CubeRotator::vec3::operator[](int ind)
         default:
             break;
     }
+	return ERROR;
 }

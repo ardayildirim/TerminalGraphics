@@ -24,7 +24,8 @@ int main()
 	else if(inp == '2')
 	{
 		CubeRotator cubeRotator(screen_width,screen_height);
-		cubeRotator.start();
+		//cubeRotator.start();
+		//cubeRotator.pointsPrint();
 	}
     
     return 0;

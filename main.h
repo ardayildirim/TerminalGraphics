@@ -12,7 +12,7 @@
 using std::cout;
 using std::cin;
 
-
+const long ERROR = -574128963;
 
 
 #endif
