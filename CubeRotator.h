@@ -1,7 +1,9 @@
+#include "main.h"
+
 #ifndef __CUBE_ROTATOR_H
 #define __CUBE_ROTATOR_H
 
-#include <string>
+
 
 class CubeRotator
 {
@@ -19,7 +21,7 @@ private:
 			double magnitude();
 		};
 
-	double  dot_product(vec3&,vec3&);
+	double dot_product(vec3&,vec3&);
 
 	double a; // a = length of any side of the cube.
 	int pointDensity; // there are pointDensity number of points on one side of the cube, it is like resolution or sensitivity
@@ -39,8 +41,6 @@ public:
 	CubeRotator();
 	CubeRotator(int scrWidth,int scrHeight); 
 	~CubeRotator();
-
-	void test();
 	
 	void start();
 	void pointsPrint();

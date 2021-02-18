@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
-
+#include <string>
 
 using std::cout;
 using std::cin;

@@ -1,5 +1,4 @@
 #include "CubeRotator.h"
-#include "main.h"
 
 
 CubeRotator::CubeRotator()
@@ -13,10 +12,14 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
     this->sw = screen_width;
     this->sh = screen_height;
 
+    //point density can be changed but <20 values do not work well 
     pointDensity = 60;
+
+
     a = 5;
+
+    //getting memory for points
     points = new vec3**[6];
-    
     for(int side = 0; side < 6; side++)
     {
         points[side] = new vec3*[pointDensity];
@@ -26,9 +29,8 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
         }
     }
     
+    //finding unrotated values of all points
     double interval = a / (pointDensity - 1);
-
-
     double x,y,z;
 
     x = -a/2;
@@ -75,9 +77,10 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
 
     
 
-    //K1 = sw*K2*3/(8*(2*a));
+    //K1 is closeness of the camera to 2d projection.
     K1 = sw*K2*5/(16*a);
 
+    //normals of unrotated sides of the cube initialized
     normals = new vec3[6];
 
     normals[0] = vec3(0,0,1);
@@ -89,9 +92,11 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
     normals[4] = vec3(0,1,0);
     normals[5] = vec3(0,-1,0);
 
+    //direction of global lightning.
     lightSource = vec3(0,0,-1);
     lightSource.normalize();
 
+    
 	lightstring = ".,-~:;=!*#$@";
     
 
@@ -118,10 +123,12 @@ void CubeRotator::destructor()
     delete [] points;
     delete [] normals;
 }
+
 double CubeRotator::dot_product(vec3& v1, vec3& v2)
 {
     return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
 }
+
 void CubeRotator::start()
 {
     double A,B;
@@ -131,11 +138,11 @@ void CubeRotator::start()
     {
         
         render_frame(A,B);
-        
         A += 0.05;
-        B += 0.02;
-        usleep(40000);
-    }
+        B += 0.03;
+        usleep(30000);
+    } 
+   
     
 }
 
@@ -147,9 +154,7 @@ void CubeRotator::render_frame(double A, double B)
     vec3 rotatedNormals[6];
     for(int i = 0; i < 6; i++)
     {
-        //cout << normals[i].magnitude() << "\n";
         rotatedNormals[i] = rotate(normals[i],A,B);
-        //cout << rotatedNormals[i].magnitude() << "\n";
     }
 
     
@@ -167,24 +172,12 @@ void CubeRotator::render_frame(double A, double B)
     {
         dotproducts[i] = dot_product(rotatedNormals[i],lightSource);
     }
-
-    /*for(int i = 0; i < 6; i++)
-    {
-        vec3& cn = rotatedNormals[i];
-        double ooz = 1.0/cn.z;
-        int xp = (int) (sw/2 + K1*ooz*cn.x);
-        int yp = (int) (sh/2 - K1*ooz*cn.y);
-        if(zbuffer[xp][yp] < ooz)
-        {
-            //output[xp][yp] = ".,-~:;=!*#$@"[(int) (11*L)];
-			output[xp][yp] = '.';
-            zbuffer[xp][yp] = ooz;
-        }
-    }*/
-
     
     for(int side = 0; side < 6; side++)
     {
+        double L = dotproducts[side]; //lightning of the face
+        if(L <= 0)
+            continue;
         for(int i = 0; i < pointDensity; i++)
         {
             for(int j = 0; j < pointDensity; j++)
@@ -193,24 +186,18 @@ void CubeRotator::render_frame(double A, double B)
                 double x=rotated.x, y=rotated.y, z=rotated.z + K2;
                 
                 
-                double ooz = 1.0/z;
+                double ooz = 1.0/z; //one over z
 
                 int xp = (int) (sw/2 + K1*ooz*x);
                 int yp = (int) (sh/2 - K1*ooz*y);
 
-                double L = dotproducts[side];
-
-                if(L > 0)
+                
+                if(zbuffer[xp][yp] < ooz)
                 {
-                    if(zbuffer[xp][yp] < ooz)
-                    {
-						
-                        output[xp][yp] = lightstring[ (int)(L*11)];
-
-						//output[xp][yp] = 'a' + side;
-                        zbuffer[xp][yp] = ooz;
-                    }
+                    output[xp][yp] = lightstring[ (int)(L*11)];
+                    zbuffer[xp][yp] = ooz;
                 }
+                
                 
             }
         }
