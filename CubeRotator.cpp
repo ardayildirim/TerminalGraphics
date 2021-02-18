@@ -13,10 +13,10 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
     this->sw = screen_width;
     this->sh = screen_height;
 
-    pointDensity = 5;
-    a = 3;
+    pointDensity = 60;
+    a = 5;
     points = new vec3**[6];
-
+    
     for(int side = 0; side < 6; side++)
     {
         points[side] = new vec3*[pointDensity];
@@ -44,6 +44,7 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
         x += interval;
         
     }
+    
 
     z = a/2;
     for(int i = 0; i < pointDensity; i++)
@@ -52,7 +53,7 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
         for(int j = 0; j < pointDensity; j++)
         {
             points[2][i][j] = vec3(a/2,y,z);
-            points[3][i][j] = vec3(-x/2,y,z);
+            points[3][i][j] = vec3(-a/2,y,z);
 
             y += interval;
         }
@@ -72,8 +73,27 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
 		x += interval;
 	}
 
-    K1 = sw*K2*3/(8*(2*a));
+    
 
+    //K1 = sw*K2*3/(8*(2*a));
+    K1 = sw*K2*5/(16*a);
+
+    normals = new vec3[6];
+
+    normals[0] = vec3(0,0,1);
+    normals[1] = vec3(0,0,-1);
+
+    normals[2] = vec3(1,0,0);
+    normals[3] = vec3(-1,0,0);
+
+    normals[4] = vec3(0,1,0);
+    normals[5] = vec3(0,-1,0);
+
+    lightSource = vec3(0,0,-1);
+    lightSource.normalize();
+
+	lightstring = ".,-~:;=!*#$@";
+    
 
 }
 
@@ -96,16 +116,22 @@ void CubeRotator::destructor()
         delete [] points[side];
     }
     delete [] points;
+    delete [] normals;
 }
-
+double CubeRotator::dot_product(vec3& v1, vec3& v2)
+{
+    return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
+}
 void CubeRotator::start()
 {
     double A,B;
     A = 0.0;
     B = 0.0;
-    while(true || false+true/0)
+    while(true)
     {
+        
         render_frame(A,B);
+        
         A += 0.05;
         B += 0.02;
         usleep(40000);
@@ -118,6 +144,15 @@ void CubeRotator::render_frame(double A, double B)
 	char output[sw][sh];
     double zbuffer[sw][sh];
 
+    vec3 rotatedNormals[6];
+    for(int i = 0; i < 6; i++)
+    {
+        //cout << normals[i].magnitude() << "\n";
+        rotatedNormals[i] = rotate(normals[i],A,B);
+        //cout << rotatedNormals[i].magnitude() << "\n";
+    }
+
+    
     for(int i = 0; i < sw; i++)
     {
         for(int j = 0; j < sh; j++)
@@ -127,6 +162,27 @@ void CubeRotator::render_frame(double A, double B)
         }
     }
 
+    double dotproducts[6];
+    for(int i = 0; i < 6; i++)
+    {
+        dotproducts[i] = dot_product(rotatedNormals[i],lightSource);
+    }
+
+    /*for(int i = 0; i < 6; i++)
+    {
+        vec3& cn = rotatedNormals[i];
+        double ooz = 1.0/cn.z;
+        int xp = (int) (sw/2 + K1*ooz*cn.x);
+        int yp = (int) (sh/2 - K1*ooz*cn.y);
+        if(zbuffer[xp][yp] < ooz)
+        {
+            //output[xp][yp] = ".,-~:;=!*#$@"[(int) (11*L)];
+			output[xp][yp] = '.';
+            zbuffer[xp][yp] = ooz;
+        }
+    }*/
+
+    
     for(int side = 0; side < 6; side++)
     {
         for(int i = 0; i < pointDensity; i++)
@@ -134,24 +190,32 @@ void CubeRotator::render_frame(double A, double B)
             for(int j = 0; j < pointDensity; j++)
             {
                 vec3 rotated = rotate(points[side][i][j],A,B);
-                double x=rotated.x, y=rotated.y, z=rotated.z;
+                double x=rotated.x, y=rotated.y, z=rotated.z + K2;
                 
                 
                 double ooz = 1.0/z;
 
                 int xp = (int) (sw/2 + K1*ooz*x);
                 int yp = (int) (sh/2 - K1*ooz*y);
-                if(zbuffer[xp][yp] < ooz)
+
+                double L = dotproducts[side];
+
+                if(L > 0)
                 {
-                    output[xp][yp] = 'a' + side;
-                    //output[xp][yp] = '.';
-                    zbuffer[xp][yp] = ooz;
+                    if(zbuffer[xp][yp] < ooz)
+                    {
+						
+                        output[xp][yp] = lightstring[ (int)(L*11)];
+
+						//output[xp][yp] = 'a' + side;
+                        zbuffer[xp][yp] = ooz;
+                    }
                 }
                 
             }
         }
     }
-
+	
     printf("\x1b[H");
     for(int i = 0; i < sw; i++)
     {
@@ -172,7 +236,7 @@ CubeRotator::vec3 CubeRotator::rotate(vec3& p, double A, double B)
     double x = p.x,y=p.y,z=p.z;
     double newx = -y*cosA*sinB+z*sinA*sinB+x*cosB;
     double newy = y*cosA*cosB-z*sinA*cosB+x*sinB;
-    double newz = y*sinA+z*cosA + K2;
+    double newz = y*sinA+z*cosA;
 
     return vec3(newx,newy,newz);
 }
@@ -228,4 +292,17 @@ double CubeRotator::vec3::operator[](int ind)
             break;
     }
 	return ERROR;
+}
+
+void CubeRotator::vec3::normalize()
+{
+    double mag = sqrt(x*x + y*y + z*z);
+    x /= mag;
+    y /= mag;
+    z /= mag;
+}
+
+double CubeRotator::vec3::magnitude()
+{
+    return sqrt(x*x + y*y + z*z);
 }

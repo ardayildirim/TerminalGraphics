@@ -11,22 +11,14 @@ int main()
 	screen_width = w.ws_row;
 	screen_height = w.ws_col;
 
-    cout << "Which one do you want to see?\n";
-    cout << "1-Rotating donut\n"
-    <<		"2-Rotating cube\n";
 
-	char inp;
-	cin >> inp;
-	if(inp == '1')
-	{
-		
-	}
-	else if(inp == '2')
-	{
-		CubeRotator cubeRotator(screen_width,screen_height);
-		cubeRotator.start();
-		//cubeRotator.pointsPrint();
-	}
+
+	CubeRotator cubeRotator(screen_width,screen_height);
+	cubeRotator.start();
+	
+	//cubeRotator.start();
+	//cubeRotator.pointsPrint();
+	//}
     
     return 0;
 }
