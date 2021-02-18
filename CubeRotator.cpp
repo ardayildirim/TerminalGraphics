@@ -9,10 +9,11 @@ CubeRotator::CubeRotator()
 
 CubeRotator::CubeRotator(int screen_width,int screen_height)
 {
-    this->screen_width = screen_width;
-    this->screen_height = screen_height;
+    
+    this->sw = screen_width;
+    this->sh = screen_height;
 
-    pointDensity = 3;
+    pointDensity = 5;
     a = 3;
     points = new vec3**[6];
 
@@ -71,6 +72,8 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
 		x += interval;
 	}
 
+    K1 = sw*K2*3/(8*(2*a));
+
 
 }
 
@@ -103,16 +106,75 @@ void CubeRotator::start()
     while(true || false+true/0)
     {
         render_frame(A,B);
-        A += 0.07;
+        A += 0.05;
         B += 0.02;
-        usleep(10000);
+        usleep(40000);
     }
     
 }
 
 void CubeRotator::render_frame(double A, double B)
 {
-	;
+	char output[sw][sh];
+    double zbuffer[sw][sh];
+
+    for(int i = 0; i < sw; i++)
+    {
+        for(int j = 0; j < sh; j++)
+        {
+            output[i][j] = ' ';
+            zbuffer[i][j] = 0;
+        }
+    }
+
+    for(int side = 0; side < 6; side++)
+    {
+        for(int i = 0; i < pointDensity; i++)
+        {
+            for(int j = 0; j < pointDensity; j++)
+            {
+                vec3 rotated = rotate(points[side][i][j],A,B);
+                double x=rotated.x, y=rotated.y, z=rotated.z;
+                
+                
+                double ooz = 1.0/z;
+
+                int xp = (int) (sw/2 + K1*ooz*x);
+                int yp = (int) (sh/2 - K1*ooz*y);
+                if(zbuffer[xp][yp] < ooz)
+                {
+                    output[xp][yp] = 'a' + side;
+                    //output[xp][yp] = '.';
+                    zbuffer[xp][yp] = ooz;
+                }
+                
+            }
+        }
+    }
+
+    printf("\x1b[H");
+    for(int i = 0; i < sw; i++)
+    {
+        for(int j = 0; j < sh; j++)
+        {
+            putchar(output[i][j]);
+        }
+        putchar('\n');
+    }
+}
+
+CubeRotator::vec3 CubeRotator::rotate(vec3& p, double A, double B)
+{
+    //{{cosB,-sinB,0},{sinB,cosB,0},{0,0,1}}*{{1,0,0},{0,cosA,-sinA},{0,sinA,cosA}}*{{x},{y},{z}}
+    double cosA = cos(A), sinA = sin(A);
+    double cosB = cos(B), sinB = sin(B);
+
+    double x = p.x,y=p.y,z=p.z;
+    double newx = -y*cosA*sinB+z*sinA*sinB+x*cosB;
+    double newy = y*cosA*cosB-z*sinA*cosB+x*sinB;
+    double newz = y*sinA+z*cosA + K2;
+
+    return vec3(newx,newy,newz);
 }
 
 void CubeRotator::pointsPrint()
