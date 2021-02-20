@@ -13,7 +13,7 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
     this->sh = screen_height;
 
     //point density can be changed but <20 values do not work well 
-    pointDensity = 60;
+    pointDensity = 75;
 
 
     a = 5;
@@ -134,13 +134,21 @@ void CubeRotator::start()
     double A,B;
     A = 0.0;
     B = 0.0;
-    while(true)
+    if(lightningOn)
+        while(true)
+        {
+            
+            render_frame(A,B);
+            A += 0.05;
+            B += 0.02;
+            usleep(40000);
+        }
+    else while(true)
     {
-        
-        render_frame(A,B);
+        render_frame_nolight(A,B);
         A += 0.05;
-        B += 0.03;
-        usleep(30000);
+        B += 0.02;
+        usleep(40000);
     } 
    
     
@@ -214,6 +222,64 @@ void CubeRotator::render_frame(double A, double B)
     }
 }
 
+void CubeRotator::render_frame_nolight(double A, double B)
+{
+	char output[sw][sh];
+    double zbuffer[sw][sh];
+
+    
+
+    
+    for(int i = 0; i < sw; i++)
+    {
+        for(int j = 0; j < sh; j++)
+        {
+            output[i][j] = ' ';
+            zbuffer[i][j] = 0;
+        }
+    }
+
+    
+    
+    for(int side = 0; side < 6; side++)
+    {
+        
+        for(int i = 0; i < pointDensity; i++)
+        {
+            for(int j = 0; j < pointDensity; j++)
+            {
+                vec3 rotated = rotate(points[side][i][j],A,B);
+                double x=rotated.x, y=rotated.y, z=rotated.z + K2;
+                
+                
+                double ooz = 1.0/z; //one over z
+
+                int xp = (int) (sw/2 + K1*ooz*x);
+                int yp = (int) (sh/2 - K1*ooz*y);
+
+                
+                if(zbuffer[xp][yp] < ooz)
+                {
+                    output[xp][yp] = 'a' + side;
+                    zbuffer[xp][yp] = ooz;
+                }
+                
+                
+            }
+        }
+    }
+	
+    printf("\x1b[H");
+    for(int i = 0; i < sw; i++)
+    {
+        for(int j = 0; j < sh; j++)
+        {
+            putchar(output[i][j]);
+        }
+        putchar('\n');
+    }
+}
+
 CubeRotator::vec3 CubeRotator::rotate(vec3& p, double A, double B)
 {
     //{{cosB,-sinB,0},{sinB,cosB,0},{0,0,1}}*{{1,0,0},{0,cosA,-sinA},{0,sinA,cosA}}*{{x},{y},{z}}
@@ -243,6 +309,11 @@ void CubeRotator::pointsPrint()
 		}
 		cout <<"next side\n";
 	}
+}
+
+void CubeRotator::setLightning(bool val)
+{
+	lightningOn = val;
 }
 
 CubeRotator::vec3::vec3()
