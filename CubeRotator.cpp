@@ -354,7 +354,7 @@ double CubeRotator::vec3::operator[](int ind)
 
 void CubeRotator::vec3::normalize()
 {
-    double mag = sqrt(x*x + y*y + z*z);
+    double mag = magnitude();
     x /= mag;
     y /= mag;
     z /= mag;
