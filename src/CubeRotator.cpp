@@ -191,7 +191,7 @@ void CubeRotator::render_frame(double A, double B)
             for(int j = 0; j < pointDensity; j++)
             {
                 vec3 rotated = rotate(points[side][i][j],A,B);
-                double x=rotated.x, y=rotated.y, z=rotated.z + K2;
+                double x=rotated.x , y=rotated.y, z=rotated.z + K2;
                 
                 
                 double ooz = 1.0/z; //one over z
@@ -269,7 +269,7 @@ void CubeRotator::render_frame_nolight(double A, double B)
         }
     }
 	
-    printf("\x1b[H");
+    printf("\x1b[H"); //moves the cursor to the top left corner of the screen
     for(int i = 0; i < sw; i++)
     {
         for(int j = 0; j < sh; j++)
@@ -280,7 +280,7 @@ void CubeRotator::render_frame_nolight(double A, double B)
     }
 }
 
-CubeRotator::vec3 CubeRotator::rotate(vec3& p, double A, double B)
+vec3 CubeRotator::rotate(vec3& p, double A, double B)
 {
     //{{cosB,-sinB,0},{sinB,cosB,0},{0,0,1}}*{{1,0,0},{0,cosA,-sinA},{0,sinA,cosA}}*{{x},{y},{z}}
     double cosA = cos(A), sinA = sin(A);
