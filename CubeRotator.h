@@ -1,4 +1,5 @@
 #include "main.h"
+#include "vec3.h"
 
 #ifndef __CUBE_ROTATOR_H
 #define __CUBE_ROTATOR_H
@@ -9,17 +10,7 @@ class CubeRotator
 {
 	
 private:
-	struct vec3
-		{
-			double x,y,z;
-			vec3();
-			vec3(double,double,double);
-			vec3 operator*(const double& rhs);
-			vec3 operator+(const vec3& rhs);
-			double operator[](int ind);
-			void normalize();
-			double magnitude();
-		};
+	
 
 	double dot_product(vec3&,vec3&);
 
