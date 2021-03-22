@@ -12,7 +12,9 @@
 using std::cout;
 using std::cin;
 
-const long ERROR = -574128963;
+extern long ERROR;
 
+extern int screen_width;
+extern int screen_height;
 
 #endif

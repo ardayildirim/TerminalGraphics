@@ -1,16 +1,10 @@
 #include "CubeRotator.h"
 
 
+
 CubeRotator::CubeRotator()
 {
-
-}
-
-CubeRotator::CubeRotator(int screen_width,int screen_height)
-{
     
-    this->sw = screen_width;
-    this->sh = screen_height;
 
     //point density can be changed but <20 values do not work well 
     pointDensity = 75;
@@ -78,7 +72,7 @@ CubeRotator::CubeRotator(int screen_width,int screen_height)
     
 
     //K1 is closeness of the camera to 2d projection.
-    K1 = sw*K2*5/(16*a);
+    K1 = screen_width*K2*5/(16*a);
 
     //normals of unrotated sides of the cube initialized
     normals = new vec3[6];
@@ -156,8 +150,8 @@ void CubeRotator::start()
 
 void CubeRotator::render_frame(double A, double B)
 {
-	char output[sw][sh];
-    double zbuffer[sw][sh];
+	char output[screen_width][screen_height];
+    double zbuffer[screen_width][screen_height];
 
     vec3 rotatedNormals[6];
     for(int i = 0; i < 6; i++)
@@ -166,9 +160,9 @@ void CubeRotator::render_frame(double A, double B)
     }
 
     
-    for(int i = 0; i < sw; i++)
+    for(int i = 0; i < screen_width; i++)
     {
-        for(int j = 0; j < sh; j++)
+        for(int j = 0; j < screen_height; j++)
         {
             output[i][j] = ' ';
             zbuffer[i][j] = 0;
@@ -196,8 +190,8 @@ void CubeRotator::render_frame(double A, double B)
                 
                 double ooz = 1.0/z; //one over z
 
-                int xp = (int) (sw/2 + K1*ooz*x);
-                int yp = (int) (sh/2 - K1*ooz*y);
+                int xp = (int) (screen_width/2 + K1*ooz*x);
+                int yp = (int) (screen_height/2 - K1*ooz*y);
 
                 
                 if(zbuffer[xp][yp] < ooz)
@@ -212,9 +206,9 @@ void CubeRotator::render_frame(double A, double B)
     }
 	
     printf("\x1b[H");
-    for(int i = 0; i < sw; i++)
+    for(int i = 0; i < screen_width; i++)
     {
-        for(int j = 0; j < sh; j++)
+        for(int j = 0; j < screen_height; j++)
         {
             putchar(output[i][j]);
         }
@@ -224,15 +218,15 @@ void CubeRotator::render_frame(double A, double B)
 
 void CubeRotator::render_frame_nolight(double A, double B)
 {
-	char output[sw][sh];
-    double zbuffer[sw][sh];
+	char output[screen_width][screen_height];
+    double zbuffer[screen_width][screen_height];
 
     
 
     
-    for(int i = 0; i < sw; i++)
+    for(int i = 0; i < screen_width; i++)
     {
-        for(int j = 0; j < sh; j++)
+        for(int j = 0; j < screen_height; j++)
         {
             output[i][j] = ' ';
             zbuffer[i][j] = 0;
@@ -254,8 +248,8 @@ void CubeRotator::render_frame_nolight(double A, double B)
                 
                 double ooz = 1.0/z; //one over z
 
-                int xp = (int) (sw/2 + K1*ooz*x);
-                int yp = (int) (sh/2 - K1*ooz*y);
+                int xp = (int) (screen_width/2 + K1*ooz*x);
+                int yp = (int) (screen_height/2 - K1*ooz*y);
 
                 
                 if(zbuffer[xp][yp] < ooz)
@@ -270,9 +264,9 @@ void CubeRotator::render_frame_nolight(double A, double B)
     }
 	
     printf("\x1b[H"); //moves the cursor to the top left corner of the screen
-    for(int i = 0; i < sw; i++)
+    for(int i = 0; i < screen_width; i++)
     {
-        for(int j = 0; j < sh; j++)
+        for(int j = 0; j < screen_height; j++)
         {
             putchar(output[i][j]);
         }
