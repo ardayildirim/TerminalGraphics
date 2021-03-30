@@ -1,3 +1,6 @@
+#ifndef _VEC3_H
+#define _VEC3_H
+
 class vec3
 {
 public:
@@ -10,3 +13,5 @@ public:
 	void normalize();
 	double magnitude();
 };
+
+#endif

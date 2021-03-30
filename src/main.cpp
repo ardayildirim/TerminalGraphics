@@ -1,4 +1,5 @@
-#include "CubeRotator.h"
+#include "Scene1.h"
+#include "Scene2.h"
 #include "main.h"
 
 int screen_width;
@@ -18,20 +19,25 @@ int main()
     
     cout << "Welcome to Terminal Graphics App\n\n";
     cout << "1- Rotating Cube at the Center\n";
-    cout << "2- \n\n";
-    
+    cout << "2- A moving and rotating cube\n";
 
-	CubeRotator cubeRotator;
 
-	
-	cubeRotator.setLightning(true);
-	
-   
+    char input;
+    cin >> input;
 
-	//rotating cube
-	cubeRotator.start();
-	
-
+    if(input == '1')
+    {
+        Scene1 scene1;
+        scene1.setLightning(true);
+        scene1.start();
+    }
+    else if(input == '2')
+    {
+        Scene2 scene2;
+        scene2.setLightning(true);
+        scene2.start();
+    }
+        
     
     return 0;
 }
