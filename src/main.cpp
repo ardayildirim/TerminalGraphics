@@ -34,7 +34,6 @@ int main()
     else if(input == '2')
     {
         Scene2 scene2;
-        scene2.setLightning(true);
         scene2.start();
     }
         
