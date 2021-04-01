@@ -7,7 +7,7 @@ Scene2::Scene2()
     
 
     //point density can be changed but <20 values do not work well 
-    pointDensity = 100;
+    pointDensity = 120;
 
 
     a = 5;
@@ -142,7 +142,7 @@ void Scene2::start()
         render_frame(A,B);
         A += 0.05;
         B += 0.02;
-        usleep(40000);
+        usleep(30000);
     }
     
    
