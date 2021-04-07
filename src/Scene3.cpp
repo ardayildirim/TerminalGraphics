@@ -131,8 +131,7 @@ Scene3::Scene3()
 
     
 
-    //K1 is closeness of the camera to 2d projection.
-    K1 = screen_width*K2*5/(16*aFirst);
+    
 
     //normals of unrotated sides of the cube initialized
     normals = new vec3[6];
@@ -158,6 +157,9 @@ Scene3::Scene3()
 
 	lightstring = ".,-~:;=!*#$@";
     
+
+    //K1 is closeness of the camera to 2d projection.
+    K1 = screen_width*K2*3/(8*(aFirst));
 
 }
 

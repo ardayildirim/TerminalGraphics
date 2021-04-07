@@ -71,8 +71,8 @@ Scene4::Scene4()
 
     
 
-    //K1 is closeness of the camera to 2d projection.
-    K1 = screen_width*K2*5/(16*a);
+    
+    
 
     //normals of unrotated sides of the cube initialized
     normals = new vec3[6];
@@ -96,13 +96,15 @@ Scene4::Scene4()
     
 	lightstring = ".,-~:;=!*#$@";
 
-    thetaInterval = 0.03f;
-    phiInterval = 0.04f;
+    thetaInterval = 0.025f;
+    phiInterval = 0.025f;
     R1 = 1.5f;
     R2 = 3;
 
     diff = 5.5;
-    
+
+    //K1 is closeness of the camera to 2d projection.
+    K1 = screen_width*K2*3/(8*(R1+R2));
 
 }
 
