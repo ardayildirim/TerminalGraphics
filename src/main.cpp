@@ -29,7 +29,6 @@ int main()
     if(input == '1')
     {
         Scene1 scene1;
-        scene1.setLightning(true);
         scene1.start();
     }
     else if(input == '2')

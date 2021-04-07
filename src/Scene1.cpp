@@ -128,22 +128,15 @@ void Scene1::start()
     double A,B;
     A = 0.0;
     B = 0.0;
-    if(lightningOn)
-        while(true)
-        {
-            
-            render_frame(A,B);
-            A += 0.05;
-            B += 0.02;
-            usleep(40000);
-        }
-    else while(true)
+    while(true)
     {
-        render_frame_nolight(A,B);
+        
+        render_frame(A,B);
         A += 0.05;
         B += 0.02;
         usleep(40000);
-    } 
+    }
+    
    
     
 }
@@ -191,7 +184,7 @@ void Scene1::render_frame(double A, double B)
                 double ooz = 1.0/z; //one over z
 
                 int xp = (int) (screen_width/2 + K1*ooz*x);
-                int yp = (int) (screen_height/2 - K1*ooz*y);
+                int yp = (int) (screen_height/2 + K1*ooz*y);
 
                 
                 if(zbuffer[xp][yp] < ooz)
@@ -206,64 +199,6 @@ void Scene1::render_frame(double A, double B)
     }
 	
     printf("\x1b[H");
-    for(int i = 0; i < screen_width; i++)
-    {
-        for(int j = 0; j < screen_height; j++)
-        {
-            putchar(output[i][j]);
-        }
-        putchar('\n');
-    }
-}
-
-void Scene1::render_frame_nolight(double A, double B)
-{
-	char output[screen_width][screen_height];
-    double zbuffer[screen_width][screen_height];
-
-    
-
-    
-    for(int i = 0; i < screen_width; i++)
-    {
-        for(int j = 0; j < screen_height; j++)
-        {
-            output[i][j] = ' ';
-            zbuffer[i][j] = 0;
-        }
-    }
-
-    
-    
-    for(int side = 0; side < 6; side++)
-    {
-        
-        for(int i = 0; i < pointDensity; i++)
-        {
-            for(int j = 0; j < pointDensity; j++)
-            {
-                vec3 rotated = rotate(points[side][i][j],A,B);
-                double x=rotated.x, y=rotated.y, z=rotated.z + K2;
-                
-                
-                double ooz = 1.0/z; //one over z
-
-                int xp = (int) (screen_width/2 + K1*ooz*x);
-                int yp = (int) (screen_height/2 - K1*ooz*y);
-
-                
-                if(zbuffer[xp][yp] < ooz)
-                {
-                    output[xp][yp] = 'a' + side;
-                    zbuffer[xp][yp] = ooz;
-                }
-                
-                
-            }
-        }
-    }
-	
-    printf("\x1b[H"); //moves the cursor to the top left corner of the screen
     for(int i = 0; i < screen_width; i++)
     {
         for(int j = 0; j < screen_height; j++)
@@ -303,10 +238,5 @@ void Scene1::pointsPrint()
 		}
 		cout <<"next side\n";
 	}
-}
-
-void Scene1::setLightning(bool val)
-{
-	lightningOn = val;
 }
 

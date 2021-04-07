@@ -262,7 +262,7 @@ void Scene3::render_frame(double A, double B,double C,double D)
                 double ooz = 1.0/z; //one over z
 
                 int xp = (int) (screen_width/2 + K1*ooz*x);
-                int yp = (int) (screen_height/2 - K1*ooz*y);
+                int yp = (int) (screen_height/2 + K1*ooz*y);
 
                 
                 if(zbuffer[xp][yp] < ooz)
@@ -305,7 +305,7 @@ void Scene3::render_frame(double A, double B,double C,double D)
                 double ooz = 1.0/z; //one over z
 
                 int xp = (int) (screen_width/2 + K1*ooz*x);
-                int yp = (int) (screen_height/2 - K1*ooz*y);
+                int yp = (int) (screen_height/2 + K1*ooz*y);
 
                 
                 if(zbuffer[xp][yp] < ooz)
