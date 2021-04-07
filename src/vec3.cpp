@@ -21,6 +21,16 @@ vec3 vec3::operator+(const vec3& rhs)
     return vec3(x+rhs.x, y+rhs.y, z+rhs.z);
 }
 
+vec3 vec3::operator-(const vec3& rhs)
+{
+    vec3 temp;
+    temp.x = x-rhs.x;
+    temp.y = y-rhs.y;
+    temp.z = z-rhs.z;
+    return temp;
+}
+
+
 double vec3::operator[](int ind)
 {
     switch(ind)

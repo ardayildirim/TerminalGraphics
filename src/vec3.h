@@ -9,6 +9,7 @@ public:
 	vec3(double,double,double);
 	vec3 operator*(const double& rhs);
 	vec3 operator+(const vec3& rhs);
+    vec3 operator-(const vec3& rhs);
 	double operator[](int ind);
 	void normalize();
 	double magnitude();
