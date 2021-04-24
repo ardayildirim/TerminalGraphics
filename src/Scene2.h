@@ -21,7 +21,7 @@ private:
 	void render_frame(double A,double B);
 	vec3 rotate(vec3& p,double A, double B);
 	void destructor();
-	double K1=2,K2 = 6;
+	double K1=2,K2 = 10;
 
 	vec3 * normals;
 	vec3 lightSource;

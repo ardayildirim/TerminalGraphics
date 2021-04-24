@@ -207,11 +207,11 @@ void Scene3::start()
     {
         
         render_frame(A,B,C,D);
-        A += 0.05;
+        A += 0.06;
         B += 0.02;
         C += 0.04;
-        D += 0.02;
-        usleep(30000);
+        D += 0.03;
+        usleep(25000);
     }
 
    

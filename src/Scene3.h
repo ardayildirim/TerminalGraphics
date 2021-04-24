@@ -23,7 +23,7 @@ private:
 
 	vec3 rotate(vec3& p,double A, double B);
 	void destructor();
-	double K1=2,K2 = 7.5;
+	double K1=2,K2 = 10;
 
 	vec3 * normals;
 	vec3 lightSourceFirst;

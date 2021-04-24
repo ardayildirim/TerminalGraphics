@@ -148,10 +148,10 @@ void Scene4::start()
         
         render_frame(A,B,C,D);
         A += 0.05;
-        B += 0.02;
-        C += 0.05;
-        D += 0.03;
-        usleep(30000);
+        B += 0.03;
+        C += 0.06;
+        D += 0.02;
+        usleep(27000);
     }
     
    

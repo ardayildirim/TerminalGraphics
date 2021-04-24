@@ -72,7 +72,7 @@ Scene1::Scene1()
     
 
     //K1 is closeness of the camera to 2d projection.
-    K1 = screen_width*K2*5/(16*a);
+    K1 = screen_width*K2*3/(8*a);
 
     //normals of unrotated sides of the cube initialized
     normals = new vec3[6];
@@ -133,8 +133,8 @@ void Scene1::start()
         
         render_frame(A,B);
         A += 0.05;
-        B += 0.02;
-        usleep(40000);
+        B += 0.03;
+        usleep(30000);
     }
     
    
