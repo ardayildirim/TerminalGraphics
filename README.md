@@ -1,13 +1,15 @@
-# TerminalGraphics :: Work-in-progress
+# TerminalGraphics
 Rotating cubes,donuts etc.
 
 ### Usage:
 Does not work on Windows, works on Linux \
 You can use ```make all``` for compiling with g++, output file will be named main.out \
-(Note that there is only 1 cube and lightning options right now.)
+Once you run the executable, it will tell you the scenes, type "1" etc. to run the scene.
 
 ### Requirements/Dependencies:
 None. I only used standard library.
 
- \
-I am working on new shapes and environments right now.
+Scene 1 - Rotating Cube at the Center \
+Scene 2 - Moving Cube that bounces off the walls \
+Scene 3 - Two Cubes rotating at the same time \
+Scene 4 - A cube and a donut(torus) rotating
