@@ -4,8 +4,8 @@ Rotating cubes,donuts etc.
 ### Usage:
 Does not work on Windows, works on Linux.
   + You can use ```make all``` for compiling with g++ and running the executable. \
- ```make build``` will build the project with the executable ```Terminal.out``` \
-Once you run the executable, it will tell you the scenes, type "1" etc. to run the scene.
+ ```make build``` will build the project with the executable ```Terminal.out``` 
+  + ce you run the executable, it will tell you the scenes, type "1" etc. to run the scene.
 
 ### Requirements/Dependencies:
 None. I only used standard library.
