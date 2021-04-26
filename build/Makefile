@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Terminal.out
+# Target rules for targets named main.out
 
 # Build rule for target.
-Terminal.out: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Terminal.out
-.PHONY : Terminal.out
+main.out: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 main.out
+.PHONY : main.out
 
 # fast build rule for target.
-Terminal.out/fast:
-	$(MAKE) -f CMakeFiles/Terminal.out.dir/build.make CMakeFiles/Terminal.out.dir/build
-.PHONY : Terminal.out/fast
+main.out/fast:
+	$(MAKE) -f CMakeFiles/main.out.dir/build.make CMakeFiles/main.out.dir/build
+.PHONY : main.out/fast
 
 #=============================================================================
 # Target rules for targets named scenes
@@ -277,7 +277,7 @@ src/main.o: src/main.cpp.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) -f CMakeFiles/Terminal.out.dir/build.make CMakeFiles/Terminal.out.dir/src/main.cpp.o
+	$(MAKE) -f CMakeFiles/main.out.dir/build.make CMakeFiles/main.out.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -286,7 +286,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) -f CMakeFiles/Terminal.out.dir/build.make CMakeFiles/Terminal.out.dir/src/main.cpp.i
+	$(MAKE) -f CMakeFiles/main.out.dir/build.make CMakeFiles/main.out.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -295,7 +295,7 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) -f CMakeFiles/Terminal.out.dir/build.make CMakeFiles/Terminal.out.dir/src/main.cpp.s
+	$(MAKE) -f CMakeFiles/main.out.dir/build.make CMakeFiles/main.out.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
 src/vec3.o: src/vec3.cpp.o
@@ -333,7 +333,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... Terminal.out"
+	@echo "... main.out"
 	@echo "... scenes"
 	@echo "... src/Scene1.o"
 	@echo "... src/Scene1.i"

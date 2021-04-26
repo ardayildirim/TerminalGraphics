@@ -1,4 +1,4 @@
 /mnt/c/Users/pc/source/TerminalGraphics/build/CMakeFiles/rebuild_cache.dir
 /mnt/c/Users/pc/source/TerminalGraphics/build/CMakeFiles/edit_cache.dir
-/mnt/c/Users/pc/source/TerminalGraphics/build/CMakeFiles/Terminal.out.dir
+/mnt/c/Users/pc/source/TerminalGraphics/build/CMakeFiles/main.out.dir
 /mnt/c/Users/pc/source/TerminalGraphics/build/CMakeFiles/scenes.dir
