@@ -152,7 +152,6 @@ void Scene5::render_frame(double A, double B)
 				zbuffer[xp][yp] = ooz;
             }
     }   
-                
              
 
     printf("\x1b[H");
