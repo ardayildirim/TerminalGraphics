@@ -143,13 +143,14 @@ void Scene5::render_frame(double A, double B)
         int yp = (int) (screen_height/2 + K1*ooz*y);
 
         
+        yp = (screen_height/2) + 2 * ((screen_height/2) - yp);
         
         if(xp >= 0 && yp >= 0 && xp < screen_width && yp < screen_height)
 			if(zbuffer[xp][yp] < ooz)
 			{
-				output[xp][yp] = lightstring[ (int)(L*11)];
+				output[xp][yp] = output[xp][yp+1] = lightstring[ (int)(L*11)];
 				zbuffer[xp][yp] = ooz;
-			}
+            }
     }   
                 
              
