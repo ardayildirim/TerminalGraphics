@@ -1,1 +1,0 @@
-/usr/bin/c++  -std=c++17 -Wall   CMakeFiles/main.out.dir/src/main.cpp.o  -o ../main.out  libscenes.a 
