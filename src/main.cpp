@@ -2,6 +2,7 @@
 #include "Scene2.h"
 #include "Scene3.h"
 #include "Scene4.h"
+#include "Scene5.h"
 #include "main.h"
 
 int screen_width;
@@ -24,7 +25,7 @@ int main()
     cout << "2- A moving and rotating cube\n";
     cout << "3- Two cubes at one screen\n";
     cout << "4- A cube and a donut!\n";
-
+    cout << "5- Off Loader\n";
 
     char input;
     cin >> input;
@@ -48,6 +49,12 @@ int main()
     {
         Scene4 scene4;
         scene4.start();
+    }
+    else if(input == '5')
+    {
+        Scene5 scene5;
+        scene5.loadOff(weirdSpherePath,0.25f);
+        scene5.start();
     }
         
     

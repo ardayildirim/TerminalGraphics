@@ -21,4 +21,10 @@ const double twoPi = 6.283185;
 extern int screen_width;
 extern int screen_height;
 
+
+#define CentaurPath "meshes/offs/centaur.off"
+#define WomanPath "meshes/offs/woman.off"
+#define weirdSpherePath "meshes/offs/weirdSphere.off"
+
+
 #endif
