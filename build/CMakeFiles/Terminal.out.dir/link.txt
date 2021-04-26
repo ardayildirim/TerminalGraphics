@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++17 -Wall   CMakeFiles/Terminal.out.dir/src/main.cpp.o  -o ../Terminal.out  libscenes.a 

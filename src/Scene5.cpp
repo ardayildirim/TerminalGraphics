@@ -5,7 +5,6 @@ void Scene5::loadOff(const char * filename,float scale)
     FILE* file = fopen(filename,"r");
     char s[340];
 
-
     int t2;
 
     fscanf(file,"%s",s);
