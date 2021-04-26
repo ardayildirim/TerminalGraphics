@@ -1,5 +1,5 @@
 #include "vec3.h"
-#include "main.h"
+
 
 vec3::vec3()
 {

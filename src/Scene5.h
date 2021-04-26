@@ -1,4 +1,4 @@
-#include "main.h"
+#include "Scenes.h"
 #include "vec3.h"
 
 #ifndef _SCENE_H_
