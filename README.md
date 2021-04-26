@@ -10,7 +10,7 @@ Does not work on Windows, works on Linux.
 ### Requirements/Dependencies:
 None. I only used standard library.
 
-  + Scene 1 - Rotating Cube at the Center
+  + Scene 1 - Rotating Cube at the Center \
 ![Rotating Cube](/images/scene1.gif) 
 
 Scene 2 - Moving Cube that bounces off the walls \
