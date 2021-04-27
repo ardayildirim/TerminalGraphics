@@ -12,8 +12,8 @@ void Scene5::loadOff(const char * filename,float scale)
     fscanf(file,"%d %d %d\n",&N,&faceCount,&t2);
 
     points = new vec3[N];
-    faces = new vec3[faceCount];
-    facesNormals = new vec3[faceCount];
+    faces = new vec3[2*faceCount];
+    facesNormals = new vec3[2*faceCount];
     int i = 0;
     float x,y,z;
     while(i < N)
@@ -45,13 +45,33 @@ void Scene5::loadOff(const char * filename,float scale)
 
 
     i = 0;
-    int v1,v2,v3;
-    while(i < faceCount)
+    int v1,v2,v3,v4;
+    int ind = 0;
+    while(ind < faceCount)
     {
         fscanf(file,"%d %d %d %d",&t2,&v1,&v2,&v3);
-        faces[i] = (points[v1] + points[v2] + points[v3]) * (1.0/3.0);
-		facesNormals[i] = vec3::cross_product( (points[v3] - points[v2]), (points[v1] - points[v2]) );
-        i++;
+        if(t2 == 4)
+        {
+            fscanf(file,"%d",&v4);
+            faces[i] = (points[v1] + points[v2] + points[v3]) * (1.0/3.0);
+            facesNormals[i] = vec3::cross_product( (points[v3] - points[v2]), (points[v1] - points[v2]) );
+
+            faces[i+1] = (points[v2] + points[v3] + points[v4]) * (1.0/3.0);
+            facesNormals[i+1] = vec3::cross_product( (points[v4] - points[v3]), (points[v2] - points[v3]) );
+            i+=2;
+            ind++;
+            continue;
+        }
+        if(t2 == 3)
+        {
+            faces[i] = (points[v1] + points[v2] + points[v3]) * (1.0/3.0);
+            facesNormals[i] = vec3::cross_product( (points[v3] - points[v2]), (points[v1] - points[v2]) );
+            i++;
+            ind++;
+            continue;
+        }
+        assert(false);
+        
     }
     fclose(file);
 
@@ -150,10 +170,8 @@ void Scene5::render_frame(double A, double B)
 				output[xp][yp] = output[xp][yp+1] = lightstring[ (int)(L*11)];
 				zbuffer[xp][yp] = ooz;
             }
-    }   
-             
-
-
+    }
+    
     printf("\x1b[H");
     for(int i = 0; i < screen_width; i++)
     {

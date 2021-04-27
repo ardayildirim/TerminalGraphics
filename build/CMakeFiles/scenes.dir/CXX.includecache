@@ -11,12 +11,14 @@ Scene5.h
 /mnt/c/Users/pc/source/TerminalGraphics/src/Scene5.h
 
 /mnt/c/Users/pc/source/TerminalGraphics/src/Scene5.h
-main.h
-/mnt/c/Users/pc/source/TerminalGraphics/src/main.h
+Scenes.h
+/mnt/c/Users/pc/source/TerminalGraphics/src/Scenes.h
 vec3.h
 /mnt/c/Users/pc/source/TerminalGraphics/src/vec3.h
 
-/mnt/c/Users/pc/source/TerminalGraphics/src/main.h
+/mnt/c/Users/pc/source/TerminalGraphics/src/Scenes.h
+assert.h
+-
 iostream
 -
 cmath
@@ -31,4 +33,6 @@ string
 -
 
 /mnt/c/Users/pc/source/TerminalGraphics/src/vec3.h
+Scenes.h
+/mnt/c/Users/pc/source/TerminalGraphics/src/Scenes.h
 

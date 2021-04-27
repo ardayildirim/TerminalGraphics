@@ -1,2 +1,0 @@
-/usr/bin/ar qc libscenes.a  CMakeFiles/scenes.dir/src/vec3.cpp.o CMakeFiles/scenes.dir/src/Scene1.cpp.o CMakeFiles/scenes.dir/src/Scene2.cpp.o CMakeFiles/scenes.dir/src/Scene3.cpp.o CMakeFiles/scenes.dir/src/Scene4.cpp.o CMakeFiles/scenes.dir/src/Scene5.cpp.o
-/usr/bin/ranlib libscenes.a

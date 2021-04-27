@@ -1,3 +1,5 @@
+#include "Scenes.h"
+
 #ifndef _VEC3_H
 #define _VEC3_H
 
