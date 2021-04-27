@@ -2,3 +2,7 @@
 *.out
 .vscode
 build
+buildWin
+Debug
+Release
+

@@ -10,7 +10,8 @@ class Scene2
 {
 	
 private:
-	
+	char** output;
+	double** zbuffer;
 
 	double dot_product(vec3&,vec3&);
 

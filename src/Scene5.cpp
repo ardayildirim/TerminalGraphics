@@ -48,7 +48,7 @@ void Scene5::loadOff(const char * filename)
     }
     curMax = 120;
     K2 = curMax + 2;
-    K1 = screen_width*K2*3/(8 * K2);
+    K1 = screen_width*K2*3/(24 * K2);
 
 
     i = 0;
@@ -112,8 +112,15 @@ void Scene5::loadOff(const char * filename)
 Scene5::Scene5()
 {
 
-    //K1 is closeness of the camera to 2d projection.
-    
+    output = new char* [screen_height];
+    zbuffer = new double* [screen_height];
+
+
+    for (int i = 0; i < screen_height; i++)
+    {
+        output[i] = new char[screen_width];
+        zbuffer[i] = new double[screen_width];
+    }
 
     //direction of global lightning.
     lightSource = vec3(0,0,-1);
@@ -134,6 +141,15 @@ void Scene5::destructor()
    delete [] faces;
    delete [] facesNormals;
    delete [] vertexNormals;
+
+   for (int i = 0; i < screen_height; i++)
+   {
+       delete[] output[i];
+       delete[] zbuffer[i];
+   }
+
+   delete[] output;
+   delete[] zbuffer;
 }
 
 double Scene5::dot_product(vec3 v1, vec3& v2)
@@ -149,26 +165,26 @@ void Scene5::start()
     
     while(true)
     {
-        
         render_frame(A,B);
-        A += 0.05;
-        B += 0.03;
-        usleep(30000);
+
+        #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+            Sleep(10);
+            A += 0.1;
+            B += 0.06;
+        #elif defined(__linux__) ||defined(__unix__) 
+            usleep(30000);
+            A += 0.05;
+            B += 0.03;
+        #endif
     }
-    
-   
-    
 }
 
 void Scene5::render_frame(double A, double B)
 {
-	char output[screen_width][screen_height];
-    double zbuffer[screen_width][screen_height];
 
-    
-    for(int i = 0; i < screen_width; i++)
+    for (int i = 0; i < screen_height; i++)
     {
-        for(int j = 0; j < screen_height; j++)
+        for (int j = 0; j < screen_width; j++)
         {
             output[i][j] = ' ';
             zbuffer[i][j] = 0;
@@ -193,13 +209,13 @@ void Scene5::render_frame(double A, double B)
         int yp = (int) (screen_height/2 + K1*ooz*y);
 
         
-        yp = (screen_height/2) + 2 * ((screen_height/2) - yp);
+        xp = (screen_width/2) + 2 * ((screen_width/2) - xp);
         
         if(xp >= 0 && yp >= 0 && xp < screen_width && yp < screen_height)
-			if(zbuffer[xp][yp] < ooz)
+			if(zbuffer[yp][xp] < ooz)
 			{
-				output[xp][yp] = output[xp][yp+1] = lightstring[ (int)(L*11)];
-				zbuffer[xp][yp] = ooz;
+				output[yp][xp] = output[yp][xp+1] = lightstring[ (int)(L*11)];
+				zbuffer[yp][xp] = ooz;
             }
     }
 
@@ -221,28 +237,35 @@ void Scene5::render_frame(double A, double B)
             int yp = (int) (screen_height/2 + K1*ooz*y);
 
             
-            yp = (screen_height/2) + 2 * ((screen_height/2) - yp);
+            xp = (screen_width/2) + 2 * ((screen_width/2) - xp);
             
-            if(xp >= 0 && yp >= 0 && xp < screen_width && yp < screen_height)
-                if(zbuffer[xp][yp] < ooz)
+            if (xp >= 0 && yp >= 0 && xp < screen_width && yp < screen_height)
+            {
+                if (zbuffer[yp][xp] < ooz)
                 {
-                    output[xp][yp] = output[xp][yp+1] = lightstring[ (int)(L*11)];
-                    zbuffer[xp][yp] = ooz;
+                    output[yp][xp] = output[yp][xp + 1] = lightstring[(int)(L * 11)];
+                    zbuffer[yp][xp] = ooz;
                 }
+            }
         }
     }
     
-    printf("\x1b[H");
-    for(int i = 0; i < screen_width; i++)
+    cursor_reset();
+    for(int i = 0; i < screen_height-1; i++)
     {
-        int j =0;
-        for(; j < screen_height; j++)
+        
+        for(int j = 0; j < screen_width; j++)
         {
             putchar(output[i][j]);
         }
-	if(!(i == screen_width-1 && j == screen_height)) // -1 was added for stopping the occasional trembling
-	    putchar('\n');	                          // on the terminal while printing ~ breuis 27.04.2000
+        putchar('\n');
     }
+    for (int j = 0; j < screen_width; j++)
+    {
+        putchar(output[screen_height-1][j]);
+    }
+
+
 }
 
 vec3 Scene5::rotate(vec3& p, double A, double B)

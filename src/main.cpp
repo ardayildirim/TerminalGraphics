@@ -5,21 +5,18 @@
 #include "Scene5.h"
 #include "main.h"
 
+void getDimensions();
+
 int screen_width;
 int screen_height;
-long ERROR = -574128963;
 
 
 int main()
 {
-	//finding screen_height and width
 
-	struct winsize w;
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-	screen_height = w.ws_col;
-	screen_width = w.ws_row; 
-    
-    cout << "Welcome to Terminal Graphics App\n\n";
+
+    cout << "Welcome to Terminal Graphics App\n";
+    cout << "You can resize the window before choosing\n\n";
     cout << "1- Rotating Cube at the Center\n";
     cout << "2- A moving and rotating cube\n";
     cout << "3- Two cubes at one screen\n";
@@ -28,6 +25,9 @@ int main()
 
     char input;
     cin >> input;
+
+    //finding screen_height and width
+    getDimensions();
 
     if(input == '1')
     {
@@ -59,4 +59,31 @@ int main()
         
     
     return 0;
+}
+void getDimensions()
+{
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__) || defined(_WIN64)
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    int columns, rows;
+
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+      
+    screen_width = csbi.srWindow.Right - csbi.srWindow.Left;
+    screen_height = csbi.srWindow.Bottom - csbi.srWindow.Top;
+#elif defined(__linux__) || defined(__unix__) // all unices not caught above
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    screen_height = w.ws_row; 
+    screen_width = w.ws_col;
+#endif
+}
+void cursor_reset() {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__) || defined(_WIN64)
+    COORD cursor;
+    cursor.X = 0;
+    cursor.Y = 0;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursor);
+#elif defined(__linux__) || defined(__unix__) // all unices not caught above
+    printf("\x1b[H");
+#endif
 }

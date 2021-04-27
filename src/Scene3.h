@@ -10,7 +10,8 @@ class Scene3
 {
 	
 private:
-	
+	char** output;
+	double** zbuffer;
 
 	double dot_product(vec3&,vec3&);
 
@@ -28,7 +29,7 @@ private:
 	vec3 * normals;
 	vec3 lightSourceFirst;
     vec3 lightSourceSecond;
-    double yDif;
+    double xDif;
 	
 	std::string lightstring;
 

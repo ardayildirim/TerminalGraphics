@@ -4,7 +4,13 @@
 
 Scene2::Scene2()
 {
-    
+    output = new char* [screen_height];
+    zbuffer = new double* [screen_height];
+    for (int i = 0; i < screen_height; i++)
+    {
+        output[i] = new char[screen_width];
+        zbuffer[i] = new double[screen_width];
+    }
 
     //point density can be changed but <20 values do not work well 
     pointDensity = 120;
@@ -123,6 +129,15 @@ void Scene2::destructor()
     }
     delete [] points;
     delete [] normals;
+
+    for (int i = 0; i < screen_height; i++)
+    {
+        delete[] output[i];
+        delete[] zbuffer[i];
+    }
+
+    delete[] output;
+    delete[] zbuffer;
 }
 
 double Scene2::dot_product(vec3& v1, vec3& v2)
@@ -142,7 +157,11 @@ void Scene2::start()
         render_frame(A,B);
         A += 0.04;
         B += 0.05;
+        #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+        Sleep(27);
+        #elif defined(__linux__) ||defined(__unix__) 
         usleep(27000);
+        #endif
     }
     
    
@@ -151,9 +170,6 @@ void Scene2::start()
 
 void Scene2::render_frame(double A, double B)
 {
-	char output[screen_width][screen_height];
-    double zbuffer[screen_width][screen_height];
-
     vec3 rotatedNormals[6];
     for(int i = 0; i < 6; i++)
     {
@@ -161,9 +177,9 @@ void Scene2::render_frame(double A, double B)
     }
 
     
-    for(int i = 0; i < screen_width; i++)
+    for(int i = 0; i < screen_height; i++)
     {
-        for(int j = 0; j < screen_height; j++)
+        for(int j = 0; j < screen_width; j++)
         {
             output[i][j] = ' ';
             zbuffer[i][j] = 0;
@@ -196,26 +212,32 @@ void Scene2::render_frame(double A, double B)
                 int xp = (int) (screen_width/2 + K1*ooz*x);
                 int yp = (int) (screen_height/2 + K1*ooz*y);
 
-                
-                if(zbuffer[xp][yp] < ooz)
+                if (xp >= 0 && yp >= 0 && xp < screen_width && yp < screen_height)
                 {
-                    output[xp][yp] = lightstring[ (int)(L*11)];
-                    zbuffer[xp][yp] = ooz;
+                    if (zbuffer[yp][xp] < ooz)
+                    {
+                        output[yp][xp] = lightstring[(int)(L * 11)];
+                        zbuffer[yp][xp] = ooz;
+                    }
                 }
-                
                 
             }
         }
     }
 	
-    printf("\x1b[H");
-    for(int i = 0; i < screen_width; i++)
+    cursor_reset();
+
+    for(int i = 0; i < screen_height-1; i++)
     {
-        for(int j = 0; j < screen_height; j++)
+        for(int j = 0; j < screen_width; j++)
         {
             putchar(output[i][j]);
         }
         putchar('\n');
+    }
+    for (int j = 0; j < screen_width; j++)
+    {
+        putchar(output[screen_height-1][j]);
     }
 
     xDif += xStep * xDir;
@@ -230,11 +252,8 @@ void Scene2::render_frame(double A, double B)
         yDir *= -1;
     } 
 
-    lightSource = vec3(-xDif/10,-yDif/10,-1);
+    lightSource = vec3(-xDif,-yDif,-K2);
     lightSource.normalize();
-
-    
-
 }
 
 

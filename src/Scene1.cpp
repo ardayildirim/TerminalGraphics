@@ -1,14 +1,17 @@
 #include "Scene1.h"
 
-
-
 Scene1::Scene1()
 {
-    
+    output = new char* [screen_height];
+    zbuffer = new double* [screen_height];
+    for (int i = 0; i < screen_height; i++)
+    {
+        output[i] = new char[screen_width];
+        zbuffer[i] = new double[screen_width];
+    }
 
     //point density can be changed but <20 values do not work well 
     pointDensity = 75;
-
 
     a = 5;
 
@@ -69,10 +72,8 @@ Scene1::Scene1()
 		x += interval;
 	}
 
-    
-
     //K1 is closeness of the camera to 2d projection.
-    K1 = screen_width*K2*3/(8*a);
+    K1 = screen_width*K2*3/(24*a);
 
     //normals of unrotated sides of the cube initialized
     normals = new vec3[6];
@@ -116,6 +117,15 @@ void Scene1::destructor()
     }
     delete [] points;
     delete [] normals;
+
+    for (int i = 0; i < screen_height; i++)
+    {
+        delete[] output[i];
+        delete[] zbuffer[i];
+    }
+
+    delete[] output;
+    delete[] zbuffer;
 }
 
 double Scene1::dot_product(vec3& v1, vec3& v2)
@@ -134,7 +144,11 @@ void Scene1::start()
         render_frame(A,B);
         A += 0.05;
         B += 0.03;
+        #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+        Sleep(30);
+        #elif defined(__linux__) ||defined(__unix__) 
         usleep(30000);
+        #endif
     }
     
    
@@ -143,9 +157,6 @@ void Scene1::start()
 
 void Scene1::render_frame(double A, double B)
 {
-	char output[screen_width][screen_height];
-    double zbuffer[screen_width][screen_height];
-
     vec3 rotatedNormals[6];
     for(int i = 0; i < 6; i++)
     {
@@ -153,9 +164,9 @@ void Scene1::render_frame(double A, double B)
     }
 
     
-    for(int i = 0; i < screen_width; i++)
+    for(int i = 0; i < screen_height; i++)
     {
-        for(int j = 0; j < screen_height; j++)
+        for(int j = 0; j < screen_width; j++)
         {
             output[i][j] = ' ';
             zbuffer[i][j] = 0;
@@ -186,26 +197,34 @@ void Scene1::render_frame(double A, double B)
                 int xp = (int) (screen_width/2 + K1*ooz*x);
                 int yp = (int) (screen_height/2 + K1*ooz*y);
 
-                
-                if(zbuffer[xp][yp] < ooz)
+                xp = (screen_width / 2) + 2 * ((screen_width / 2) - xp);
+
+                if (xp >= 0 && yp >= 0 && xp < screen_width && yp < screen_height)
                 {
-                    output[xp][yp] = lightstring[ (int)(L*11)];
-                    zbuffer[xp][yp] = ooz;
+                    if (zbuffer[yp][xp] < ooz)
+                    {
+                        output[yp][xp] = lightstring[(int)(L * 11)];
+                        zbuffer[yp][xp] = ooz;
+                    }
                 }
-                
                 
             }
         }
     }
 	
-    printf("\x1b[H");
-    for(int i = 0; i < screen_width; i++)
+    cursor_reset();
+
+    for(int i = 0; i < screen_height-1; i++)
     {
-        for(int j = 0; j < screen_height; j++)
+        for(int j = 0; j < screen_width; j++)
         {
             putchar(output[i][j]);
         }
         putchar('\n');
+    }
+    for (int j = 0; j < screen_width; j++)
+    {
+        putchar(output[screen_height-1][j]);
     }
 }
 
