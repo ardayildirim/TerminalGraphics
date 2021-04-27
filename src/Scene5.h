@@ -1,7 +1,7 @@
 #include "Scenes.h"
 #include "vec3.h"
 
-#ifndef _SCENE_H_
+#ifndef _SCENE5_H_
 #define _SCENE5_H_
 
 
@@ -17,7 +17,7 @@ private:
 	int faceCount;
 
     vec3 * faces;
-    vec3 * facesNormals;
+    vec3 *facesNormals,*vertexNormals;
 	vec3 * points;
 	void render_frame(double A,double B);
 	vec3 rotate(vec3& p,double A, double B);
@@ -26,6 +26,7 @@ private:
 
 
 	vec3 lightSource;
+    bool highPoly;
 	
 	std::string lightstring;
 

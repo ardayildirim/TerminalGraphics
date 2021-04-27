@@ -6,19 +6,21 @@ set(EXECUTABLE_OUTPUT_PATH "../")
 
 add_library(
   scenes
-  ../src/vec3.h
+
   ../src/vec3.cpp
   
-  ../src/Scene1.h
+
   ../src/Scene1.cpp
-  ../src/Scene2.h
+
   ../src/Scene2.cpp
-  ../src/Scene3.h
+
   ../src/Scene3.cpp
-  ../src/Scene4.h
+
   ../src/Scene4.cpp
-  ../src/Scene5.h
+
   ../src/Scene5.cpp
+
+
   )
 
 add_executable(main.out ../src/main.cpp)

@@ -3,7 +3,7 @@
 void Scene5::loadOff(const char * filename)
 {
     FILE* file = fopen(filename,"r");
-    char s[340];
+    char s[50];
 
     int t2;
 
@@ -11,13 +11,16 @@ void Scene5::loadOff(const char * filename)
 
     fscanf(file,"%d %d %d\n",&N,&faceCount,&t2);
 
+    bool * dvhn = new bool[N];
     points = new vec3[N];
     faces = new vec3[2*faceCount];
     facesNormals = new vec3[2*faceCount];
+    vertexNormals = new vec3[N];
     int i = 0;
     float x,y,z;
     while(i < N)
     {
+        dvhn[i] = false;
         fscanf(file,"%f %f %f",&x,&y,&z);
         points[i] = vec3(x,y,z);
         i++;
@@ -29,7 +32,7 @@ void Scene5::loadOff(const char * filename)
         sums = sums +  points[i];
     }
     vec3 CoM = sums * (1.0/N);
-
+    highPoly = N > 1000;
     double curMax = -1;
     for(int i = 0; i < N; i++)
     {
@@ -43,7 +46,7 @@ void Scene5::loadOff(const char * filename)
     {
         points[i] = points[i] * (120.0/curMax);
     }
-
+    curMax = 120;
     K2 = curMax + 2;
     K1 = screen_width*K2*3/(8 * K2);
 
@@ -57,11 +60,23 @@ void Scene5::loadOff(const char * filename)
         if(t2 == 4)
         {
             fscanf(file,"%d",&v4);
+            
             faces[i] = (points[v1] + points[v2] + points[v3]) * (1.0/3.0);
             facesNormals[i] = vec3::cross_product( (points[v3] - points[v2]), (points[v1] - points[v2]) );
 
             faces[i+1] = (points[v2] + points[v3] + points[v4]) * (1.0/3.0);
             facesNormals[i+1] = vec3::cross_product( (points[v4] - points[v3]), (points[v2] - points[v3]) );
+
+            if(!dvhn[v1])
+                vertexNormals[v1] = facesNormals[i];
+            if(!dvhn[v2])
+                vertexNormals[v2] = facesNormals[i];
+            if(!dvhn[v3])
+                vertexNormals[v3] = facesNormals[i];
+            if(!dvhn[v4])
+                vertexNormals[v4] = facesNormals[i+1];
+
+            
             i+=2;
             ind++;
             continue;
@@ -70,6 +85,15 @@ void Scene5::loadOff(const char * filename)
         {
             faces[i] = (points[v1] + points[v2] + points[v3]) * (1.0/3.0);
             facesNormals[i] = vec3::cross_product( (points[v3] - points[v2]), (points[v1] - points[v2]) );
+
+            if(!dvhn[v1])
+                vertexNormals[v1] = facesNormals[i];
+            if(!dvhn[v2])
+                vertexNormals[v2] = facesNormals[i];
+            if(!dvhn[v3])
+                vertexNormals[v3] = facesNormals[i];
+
+
             i++;
             ind++;
             continue;
@@ -79,7 +103,7 @@ void Scene5::loadOff(const char * filename)
     }
     fclose(file);
 
-
+    delete [] dvhn;
 
     
 }
@@ -107,6 +131,9 @@ Scene5::~Scene5()
 void Scene5::destructor()
 {
    delete [] points;
+   delete [] faces;
+   delete [] facesNormals;
+   delete [] vertexNormals;
 }
 
 double Scene5::dot_product(vec3 v1, vec3& v2)
@@ -174,6 +201,35 @@ void Scene5::render_frame(double A, double B)
 				output[xp][yp] = output[xp][yp+1] = lightstring[ (int)(L*11)];
 				zbuffer[xp][yp] = ooz;
             }
+    }
+
+    if(!highPoly)
+    {
+        for(int i = 0; i < N; i++)
+        {
+            vec3 rotated = rotate(points[i],A,B);
+
+            vec3 rotatedNormal = rotate(vertexNormals[i],A,B);
+            rotatedNormal.normalize();
+            float L = dot_product(rotatedNormal,lightSource);
+            if(L < 0)
+                continue;
+            double x=rotated.x , y=rotated.y, z=rotated.z + K2;
+            double ooz = 1.0/z; //one over z
+
+            int xp = (int) (screen_width/2 + K1*ooz*x);
+            int yp = (int) (screen_height/2 + K1*ooz*y);
+
+            
+            yp = (screen_height/2) + 2 * ((screen_height/2) - yp);
+            
+            if(xp >= 0 && yp >= 0 && xp < screen_width && yp < screen_height)
+                if(zbuffer[xp][yp] < ooz)
+                {
+                    output[xp][yp] = output[xp][yp+1] = lightstring[ (int)(L*11)];
+                    zbuffer[xp][yp] = ooz;
+                }
+        }
     }
     
     printf("\x1b[H");
