@@ -153,14 +153,17 @@ void Scene5::render_frame(double A, double B)
     }   
              
 
+
     printf("\x1b[H");
     for(int i = 0; i < screen_width; i++)
     {
-        for(int j = 0; j < screen_height; j++)
+        int j =0;
+        for(; j < screen_height; j++)
         {
             putchar(output[i][j]);
         }
-        putchar('\n');
+	if(!(i == screen_width-1 && j == screen_height)) // -1 was added for stopping the occasional trembling
+	    putchar('\n');	                          // on the terminal while printing ~ breuis 27.04.2000
     }
 }
 

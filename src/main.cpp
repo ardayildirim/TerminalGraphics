@@ -17,9 +17,7 @@ int main()
 	struct winsize w;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	screen_height = w.ws_col;
-	screen_width = w.ws_row-1; // -1 was added for stopping the occasional trembling
-	                           // on the terminal while printing ~ breuis. 27.04.2000
-
+	screen_width = w.ws_row; 
     
     cout << "Welcome to Terminal Graphics App\n\n";
     cout << "1- Rotating Cube at the Center\n";
