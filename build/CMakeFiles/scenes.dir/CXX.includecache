@@ -6,17 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/mnt/c/Users/pc/source/TerminalGraphics/src/Scene5.cpp
+/mnt/c/dev/TerminalGraphics/src/Scene5.cpp
 Scene5.h
-/mnt/c/Users/pc/source/TerminalGraphics/src/Scene5.h
+/mnt/c/dev/TerminalGraphics/src/Scene5.h
 
-/mnt/c/Users/pc/source/TerminalGraphics/src/Scene5.h
+/mnt/c/dev/TerminalGraphics/src/Scene5.h
 Scenes.h
-/mnt/c/Users/pc/source/TerminalGraphics/src/Scenes.h
+/mnt/c/dev/TerminalGraphics/src/Scenes.h
 vec3.h
-/mnt/c/Users/pc/source/TerminalGraphics/src/vec3.h
+/mnt/c/dev/TerminalGraphics/src/vec3.h
 
-/mnt/c/Users/pc/source/TerminalGraphics/src/Scenes.h
+/mnt/c/dev/TerminalGraphics/src/Scenes.h
 assert.h
 -
 iostream
@@ -32,7 +32,7 @@ stdio.h
 string
 -
 
-/mnt/c/Users/pc/source/TerminalGraphics/src/vec3.h
+/mnt/c/dev/TerminalGraphics/src/vec3.h
 Scenes.h
-/mnt/c/Users/pc/source/TerminalGraphics/src/Scenes.h
+/mnt/c/dev/TerminalGraphics/src/Scenes.h
 

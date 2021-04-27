@@ -52,7 +52,7 @@ int main()
     else if(input == '5')
     {
         Scene5 scene5;
-        scene5.loadOff(Path,0.1f);
+        scene5.loadOff(Path);
         scene5.start();
     }
         

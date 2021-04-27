@@ -1,6 +1,6 @@
 #include "Scene5.h"
 
-void Scene5::loadOff(const char * filename,float scale)
+void Scene5::loadOff(const char * filename)
 {
     FILE* file = fopen(filename,"r");
     char s[340];
@@ -19,7 +19,7 @@ void Scene5::loadOff(const char * filename,float scale)
     while(i < N)
     {
         fscanf(file,"%f %f %f",&x,&y,&z);
-        points[i] = vec3(x,y,z) * scale;
+        points[i] = vec3(x,y,z);
         i++;
     }
 
@@ -38,6 +38,10 @@ void Scene5::loadOff(const char * filename,float scale)
         {
             curMax = points[i].magnitude();
         }
+    }
+    for(int i = 0; i < N; i++)
+    {
+        points[i] = points[i] * (120.0/curMax);
     }
 
     K2 = curMax + 2;

@@ -34,7 +34,7 @@ public:
 	Scene5();
 	~Scene5();
 	
-    void loadOff(const char * filename,float scale);
+    void loadOff(const char * filename);
 	void start();
 
 	
