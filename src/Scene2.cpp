@@ -13,7 +13,7 @@ Scene2::Scene2()
     }
 
     //point density can be changed but <20 values do not work well 
-    pointDensity = 120;
+    pointDensity = 240;
 
 
     a = 5;
@@ -78,7 +78,7 @@ Scene2::Scene2()
     
 
     //K1 is closeness of the camera to 2d projection.
-    K1 = screen_width*K2*3/(8*a);
+    K1 = screen_width*K2*3/(24*a);
 
     //normals of unrotated sides of the cube initialized
     normals = new vec3[6];
@@ -104,8 +104,8 @@ Scene2::Scene2()
 
     xDir = yDir = 1;
 
-    xStep = 0.05;
-    yStep = 0.12;
+    xStep = 0.10;
+    yStep = 0.04;
 
 }
 
@@ -140,11 +140,6 @@ void Scene2::destructor()
     delete[] zbuffer;
 }
 
-double Scene2::dot_product(vec3& v1, vec3& v2)
-{
-    return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
-}
-
 void Scene2::start()
 {
     double A,B;
@@ -173,7 +168,7 @@ void Scene2::render_frame(double A, double B)
     vec3 rotatedNormals[6];
     for(int i = 0; i < 6; i++)
     {
-        rotatedNormals[i] = rotate(normals[i],A,B);
+        rotatedNormals[i] = vec3::rotate(normals[i],A,B);
     }
 
     
@@ -189,7 +184,7 @@ void Scene2::render_frame(double A, double B)
     double dotproducts[6];
     for(int i = 0; i < 6; i++)
     {
-        dotproducts[i] = dot_product(rotatedNormals[i],lightSource);
+        dotproducts[i] = vec3::dot_product(rotatedNormals[i],lightSource);
     }
     
     for(int side = 0; side < 6; side++)
@@ -201,7 +196,7 @@ void Scene2::render_frame(double A, double B)
         {
             for(int j = 0; j < pointDensity; j++)
             {
-                vec3 rotated = rotate(points[side][i][j],A,B);
+                vec3 rotated = vec3::rotate(points[side][i][j],A,B);
                 double x=rotated.x , y=rotated.y, z=rotated.z + K2;
                 
                 x += xDif;
@@ -212,12 +207,20 @@ void Scene2::render_frame(double A, double B)
                 int xp = (int) (screen_width/2 + K1*ooz*x);
                 int yp = (int) (screen_height/2 + K1*ooz*y);
 
+                int xDifp = (int) (screen_width/2 + K1*(-1.0/K2)*xDif);
+                xp = xDifp + 2 * (xDifp - xp);
+
                 if (xp >= 0 && yp >= 0 && xp < screen_width && yp < screen_height)
                 {
                     if (zbuffer[yp][xp] < ooz)
                     {
                         output[yp][xp] = lightstring[(int)(L * 11)];
                         zbuffer[yp][xp] = ooz;
+                    }
+                    if (zbuffer[yp][xp+1] < ooz)
+                    {
+                        output[yp][xp+1] = lightstring[(int)(L * 11)];
+                        zbuffer[yp][xp+1] = ooz;
                     }
                 }
                 
@@ -243,11 +246,11 @@ void Scene2::render_frame(double A, double B)
     xDif += xStep * xDir;
     yDif += yStep * yDir;
 
-    if(xDif >= 0.5 || xDif <= -0.5)
+    if(xDif >= 2 || xDif <= -2)
     {
         xDir *= -1;
     }
-    if(yDif >= 6 || yDif <= -6)
+    if(yDif >= 1.4 || yDif <= -1.4)
     {
         yDir *= -1;
     } 
@@ -255,37 +258,3 @@ void Scene2::render_frame(double A, double B)
     lightSource = vec3(-xDif,-yDif,-K2);
     lightSource.normalize();
 }
-
-
-
-vec3 Scene2::rotate(vec3& p, double A, double B)
-{
-    //{{cosB,-sinB,0},{sinB,cosB,0},{0,0,1}}*{{1,0,0},{0,cosA,-sinA},{0,sinA,cosA}}*{{x},{y},{z}}
-    double cosA = cos(A), sinA = sin(A);
-    double cosB = cos(B), sinB = sin(B);
-
-    double x = p.x,y=p.y,z=p.z;
-    double newx = -y*cosA*sinB+z*sinA*sinB+x*cosB;
-    double newy = y*cosA*cosB-z*sinA*cosB+x*sinB;
-    double newz = y*sinA+z*cosA;
-
-    return vec3(newx,newy,newz);
-}
-
-void Scene2::pointsPrint()
-{
-	for(int side = 0; side < 6; side++)
-	{
-		for(int i = 0; i < pointDensity; i++)
-		{
-			for(int j = 0; j < pointDensity; j++)
-			{
-				auto & p = points[side][i][j];
-				cout << "x:" << p.x << " y:" << p.y << " z:" << p.z << "\n";
-			}
-
-		}
-		cout <<"next side\n";
-	}
-}
-

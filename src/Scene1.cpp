@@ -128,10 +128,6 @@ void Scene1::destructor()
     delete[] zbuffer;
 }
 
-double Scene1::dot_product(vec3& v1, vec3& v2)
-{
-    return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
-}
 
 void Scene1::start()
 {
@@ -160,7 +156,7 @@ void Scene1::render_frame(double A, double B)
     vec3 rotatedNormals[6];
     for(int i = 0; i < 6; i++)
     {
-        rotatedNormals[i] = rotate(normals[i],A,B);
+        rotatedNormals[i] = vec3::rotate(normals[i],A,B);
     }
 
     
@@ -176,7 +172,7 @@ void Scene1::render_frame(double A, double B)
     double dotproducts[6];
     for(int i = 0; i < 6; i++)
     {
-        dotproducts[i] = dot_product(rotatedNormals[i],lightSource);
+        dotproducts[i] = vec3::dot_product(rotatedNormals[i],lightSource);
     }
     
     for(int side = 0; side < 6; side++)
@@ -188,7 +184,7 @@ void Scene1::render_frame(double A, double B)
         {
             for(int j = 0; j < pointDensity; j++)
             {
-                vec3 rotated = rotate(points[side][i][j],A,B);
+                vec3 rotated = vec3::rotate(points[side][i][j],A,B);
                 double x=rotated.x , y=rotated.y, z=rotated.z + K2;
                 
                 
@@ -205,6 +201,11 @@ void Scene1::render_frame(double A, double B)
                     {
                         output[yp][xp] = lightstring[(int)(L * 11)];
                         zbuffer[yp][xp] = ooz;
+                    }
+                    if(zbuffer[yp][xp+1] < ooz)
+                    {
+                        output[yp][xp+1] = lightstring[(int)(L * 11)];
+                        zbuffer[yp][xp+1] = ooz;
                     }
                 }
                 
@@ -228,34 +229,4 @@ void Scene1::render_frame(double A, double B)
     }
 }
 
-vec3 Scene1::rotate(vec3& p, double A, double B)
-{
-    //{{cosB,-sinB,0},{sinB,cosB,0},{0,0,1}}*{{1,0,0},{0,cosA,-sinA},{0,sinA,cosA}}*{{x},{y},{z}}
-    double cosA = cos(A), sinA = sin(A);
-    double cosB = cos(B), sinB = sin(B);
-
-    double x = p.x,y=p.y,z=p.z;
-    double newx = -y*cosA*sinB+z*sinA*sinB+x*cosB;
-    double newy = y*cosA*cosB-z*sinA*cosB+x*sinB;
-    double newz = y*sinA+z*cosA;
-
-    return vec3(newx,newy,newz);
-}
-
-void Scene1::pointsPrint()
-{
-	for(int side = 0; side < 6; side++)
-	{
-		for(int i = 0; i < pointDensity; i++)
-		{
-			for(int j = 0; j < pointDensity; j++)
-			{
-				auto & p = points[side][i][j];
-				cout << "x:" << p.x << " y:" << p.y << " z:" << p.z << "\n";
-			}
-
-		}
-		cout <<"next side\n";
-	}
-}
 
