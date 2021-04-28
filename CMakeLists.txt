@@ -19,8 +19,6 @@ add_library(
   ../src/Scene4.cpp
 
   ../src/Scene5.cpp
-
-
   )
 
 add_executable(main.out ../src/main.cpp)
