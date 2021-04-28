@@ -6,16 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/mnt/c/dev/TerminalGraphics/src/Scene2.cpp
-Scene2.h
-/mnt/c/dev/TerminalGraphics/src/Scene2.h
-
-/mnt/c/dev/TerminalGraphics/src/Scene2.h
-Scenes.h
-/mnt/c/dev/TerminalGraphics/src/Scenes.h
-vec3.h
-/mnt/c/dev/TerminalGraphics/src/vec3.h
-
 /mnt/c/dev/TerminalGraphics/src/Scene5.cpp
 Scene5.h
 /mnt/c/dev/TerminalGraphics/src/Scene5.h
