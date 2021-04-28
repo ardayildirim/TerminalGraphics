@@ -13,10 +13,8 @@ Scene3::Scene3()
     //point density can be changed but <20 values do not work well 
     pointDensity = 120;
 
-
     aFirst = 4;
     aSecond = 2;
-
 
     //getting memory for pointsFirst
     pointsFirst = new vec3**[6];
@@ -161,8 +159,6 @@ Scene3::Scene3()
 
     projection1 = (int) (screen_width/2 + K1*(-1.0/K2)*(xDif));
     projection2 = (int) (screen_width/2 + K1*(-1.0/K2)*(-xDif));
-    //projection1 = screen_width/4;
-    //projection2 = projection1 * 3;
 }
 
 Scene3::~Scene3()

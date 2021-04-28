@@ -13,7 +13,7 @@ Scene2::Scene2()
     }
 
     //point density can be changed but <20 values do not work well 
-    pointDensity = 240;
+    pointDensity = 120;
 
 
     a = 5;

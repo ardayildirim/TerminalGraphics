@@ -75,7 +75,6 @@ void Scene5::loadOff(const char * filename)
                 vertexNormals[v3] = facesNormals[i];
             if(!dvhn[v4])
                 vertexNormals[v4] = facesNormals[i+1];
-
             
             i+=2;
             ind++;
@@ -107,7 +106,6 @@ void Scene5::loadOff(const char * filename)
 
     
 }
-
 
 Scene5::Scene5()
 {
@@ -152,11 +150,6 @@ void Scene5::destructor()
    delete[] zbuffer;
 }
 
-double Scene5::dot_product(vec3 v1, vec3& v2)
-{
-    return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
-}
-
 void Scene5::start()
 {
     double A,B;
@@ -190,16 +183,14 @@ void Scene5::render_frame(double A, double B)
             zbuffer[i][j] = 0;
         }
     }
-
-    
     
     for(int i = 0; i < faceCount; i++)
     {
-        vec3 rotated = rotate(faces[i],A,B);
+        vec3 rotated = vec3::rotate(faces[i],A,B);
 
-		vec3 rotatedNormal = rotate(facesNormals[i],A,B);
+		vec3 rotatedNormal = vec3::rotate(facesNormals[i],A,B);
 		rotatedNormal.normalize();
-		float L = dot_product(rotatedNormal,lightSource);
+		float L = vec3::dot_product(rotatedNormal,lightSource);
 		if(L < 0)
 			continue;
         double x=rotated.x , y=rotated.y, z=rotated.z + K2;
@@ -207,27 +198,33 @@ void Scene5::render_frame(double A, double B)
 
         int xp = (int) (screen_width/2 + K1*ooz*x);
         int yp = (int) (screen_height/2 + K1*ooz*y);
-
         
         xp = (screen_width/2) + 2 * ((screen_width/2) - xp);
         
         if(xp >= 0 && yp >= 0 && xp < screen_width && yp < screen_height)
-			if(zbuffer[yp][xp] < ooz)
+        {
+            if(zbuffer[yp][xp] < ooz)
 			{
-				output[yp][xp] = output[yp][xp+1] = lightstring[ (int)(L*11)];
+				output[yp][xp] = lightstring[ (int)(L*11)];
 				zbuffer[yp][xp] = ooz;
             }
+            if(zbuffer[yp][xp+1] < ooz)
+			{
+				output[yp][xp+1] = lightstring[ (int)(L*11)];
+				zbuffer[yp][xp+1] = ooz;
+            }
+        }
     }
 
     if(!highPoly)
     {
         for(int i = 0; i < N; i++)
         {
-            vec3 rotated = rotate(points[i],A,B);
+            vec3 rotated = vec3::rotate(points[i],A,B);
 
-            vec3 rotatedNormal = rotate(vertexNormals[i],A,B);
+            vec3 rotatedNormal = vec3::rotate(vertexNormals[i],A,B);
             rotatedNormal.normalize();
-            float L = dot_product(rotatedNormal,lightSource);
+            float L = vec3::dot_product(rotatedNormal,lightSource);
             if(L < 0)
                 continue;
             double x=rotated.x , y=rotated.y, z=rotated.z + K2;
@@ -235,7 +232,6 @@ void Scene5::render_frame(double A, double B)
 
             int xp = (int) (screen_width/2 + K1*ooz*x);
             int yp = (int) (screen_height/2 + K1*ooz*y);
-
             
             xp = (screen_width/2) + 2 * ((screen_width/2) - xp);
             
@@ -243,8 +239,13 @@ void Scene5::render_frame(double A, double B)
             {
                 if (zbuffer[yp][xp] < ooz)
                 {
-                    output[yp][xp] = output[yp][xp + 1] = lightstring[(int)(L * 11)];
+                    output[yp][xp]  = lightstring[(int)(L * 11)];
                     zbuffer[yp][xp] = ooz;
+                }
+                if (zbuffer[yp][xp+1] < ooz)
+                {
+                    output[yp][xp+1]  = lightstring[(int)(L * 11)];
+                    zbuffer[yp][xp+1] = ooz;
                 }
             }
         }
@@ -265,22 +266,4 @@ void Scene5::render_frame(double A, double B)
         putchar(output[screen_height-1][j]);
     }
 
-
 }
-
-vec3 Scene5::rotate(vec3& p, double A, double B)
-{
-    //{{cosB,-sinB,0},{sinB,cosB,0},{0,0,1}}*{{1,0,0},{0,cosA,-sinA},{0,sinA,cosA}}*{{x},{y},{z}}
-    double cosA = cos(A), sinA = sin(A);
-    double cosB = cos(B), sinB = sin(B);
-
-    double x = p.x,y=p.y,z=p.z;
-    double newx = -y*cosA*sinB+z*sinA*sinB+x*cosB;
-    double newy = y*cosA*cosB-z*sinA*cosB+x*sinB;
-    double newz = y*sinA+z*cosA;
-
-    return vec3(newx,newy,newz);
-}
-
-
-
