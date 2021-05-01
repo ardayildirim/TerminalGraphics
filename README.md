@@ -2,10 +2,13 @@
 Rotating 3D shapes, started from cubes and donuts. Now can show and translate/rotate .off files. \
 
 ### Usage:
-Does not work on Windows, works on Linux.
-  + You can use ```make all``` for compiling with g++ and running the executable. \
- ```make build```  will build the project with the executable ```Terminal.out``` 
-  + Once you run the executable, it will tell you the scenes, type "1" etc. to run the scene.
+
+  + CMake: \
+  Type ```make init``` for the first time. After first time you can use ```make all``` for compiling, output file will be named main.out
+  + G++: \
+  Type ```make g++``` to compile and run.
+  + Windows: \
+  It should work on Windows too, with or without CMake. You need to compile it yourself though.
 
 ### Requirements/Dependencies:
 None. I only used standard library.
