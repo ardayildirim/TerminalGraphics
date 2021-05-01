@@ -1,6 +1,6 @@
 #include "Scene5.h"
 
-void Scene5::loadOff(const char * filename)
+void Scene5::loadOff(const char * filename,int distance)
 {
     FILE* file = fopen(filename,"r");
     char s[50];
@@ -48,7 +48,7 @@ void Scene5::loadOff(const char * filename)
     }
     curMax = 120;
     K2 = curMax + 2;
-    K1 = screen_width*K2*3/(24 * K2);
+    K1 = screen_width*K2*3/(distance * K2);
 
 
     i = 0;
