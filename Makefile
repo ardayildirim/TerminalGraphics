@@ -17,7 +17,7 @@ clean:
 deleteO:
 	rm -rf *.o
 
-g++: clean compileg++ run
+g++: deleteO compileg++ run
 
 compileg++:
 	g++ -c src/vec3.cpp src/main.cpp src/Scene1.cpp src/Scene2.cpp src/Scene3.cpp src/Scene4.cpp src/Scene5.cpp -std=c++17 -Wall
