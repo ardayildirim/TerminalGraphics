@@ -8,7 +8,7 @@ build: clean
 run:
 	./main.out
 
-make cfg:
+cfg:
 	cd build/;cmake ../
 
 clean:
