@@ -1,7 +1,6 @@
 #include "Scene3.h"
 
 
-
 Scene3::Scene3()
 {
     output = new char*[screen_height];
@@ -14,10 +13,8 @@ Scene3::Scene3()
     //point density can be changed but <20 values do not work well 
     pointDensity = 120;
 
-
-    aFirst = 5;
-    aSecond = 4;
-
+    aFirst = 4;
+    aSecond = 2;
 
     //getting memory for pointsFirst
     pointsFirst = new vec3**[6];
@@ -47,7 +44,6 @@ Scene3::Scene3()
         x += interval;
         
     }
-    
 
     z = aFirst/2;
     for(int i = 0; i < pointDensity; i++)
@@ -106,7 +102,6 @@ Scene3::Scene3()
         
     }
     
-
     z = aSecond/2;
     for(int i = 0; i < pointDensity; i++)
     {
@@ -134,9 +129,6 @@ Scene3::Scene3()
 		x += interval;
 	}
 
-    
-
-    
 
     //normals of unrotated sides of the cube initialized
     normals = new vec3[6];
@@ -150,7 +142,7 @@ Scene3::Scene3()
     normals[4] = vec3(0,1,0);
     normals[5] = vec3(0,-1,0);
 
-    xDif = 8;
+    xDif = 3;
     //direction of global lightning.
     lightSourceFirst = vec3(xDif, 0,-K2);
     lightSourceFirst.normalize();
@@ -163,8 +155,10 @@ Scene3::Scene3()
     
 
     //K1 is closeness of the camera to 2d projection.
-    K1 = screen_width*K2*3/(8*(aFirst));
+    K1 = screen_width*K2*3/(24*(aFirst));
 
+    projection1 = (int) (screen_width/2 + K1*(-1.0/K2)*(xDif));
+    projection2 = (int) (screen_width/2 + K1*(-1.0/K2)*(-xDif));
 }
 
 Scene3::~Scene3()
@@ -203,11 +197,6 @@ void Scene3::destructor()
     delete[] zbuffer;
 }
 
-double Scene3::dot_product(vec3& v1, vec3& v2)
-{
-    return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
-}
-
 void Scene3::start()
 {
     double A,B,C,D;
@@ -231,8 +220,6 @@ void Scene3::start()
 #endif
     }
 
-   
-    
 }
 
 void Scene3::render_frame(double A, double B,double C,double D)
@@ -251,13 +238,13 @@ void Scene3::render_frame(double A, double B,double C,double D)
 
     for(int i = 0; i < 6; i++)
     {
-        rotatedNormals[i] = rotate(normals[i],A,B);
+        rotatedNormals[i] = vec3::rotate(normals[i],A,B);
     }
 
     
     for(int i = 0; i < 6; i++)
     {
-        dotproducts[i] = dot_product(rotatedNormals[i],lightSourceFirst);
+        dotproducts[i] = vec3::dot_product(rotatedNormals[i],lightSourceFirst);
     }
 
     
@@ -270,15 +257,16 @@ void Scene3::render_frame(double A, double B,double C,double D)
         {
             for(int j = 0; j < pointDensity; j++)
             {
-                vec3 rotated = rotate(pointsFirst[side][i][j],A,B);
-                double x=rotated.x - xDif, y=rotated.y, z=rotated.z + K2;
-                
+                vec3 rotated = vec3::rotate(pointsFirst[side][i][j],A,B);
+                double x=rotated.x, y=rotated.y, z=rotated.z + K2;
 
-                
                 double ooz = 1.0/z; //one over z
 
                 int xp = (int) (screen_width/2 + K1*ooz*x);
                 int yp = (int) (screen_height/2 + K1*ooz*y);
+
+                xp = projection1 + 2 * (projection1 - xp);
+                xp += xDif;
 
                 if (xp >= 0 && yp >= 0 && xp < screen_width && yp < screen_height)
                 {
@@ -286,6 +274,11 @@ void Scene3::render_frame(double A, double B,double C,double D)
                     {
                         output[yp][xp] = lightstring[(int)(L * 11)];
                         zbuffer[yp][xp] = ooz;
+                    }
+                    if (zbuffer[yp][xp+1] < ooz)
+                    {
+                        output[yp][xp+1] = lightstring[(int)(L * 11)];
+                        zbuffer[yp][xp+1] = ooz;
                     }
                 }
                 
@@ -295,13 +288,13 @@ void Scene3::render_frame(double A, double B,double C,double D)
 
     for(int i = 0; i < 6; i++)
     {
-        rotatedNormals[i] = rotate(normals[i],C,D);
+        rotatedNormals[i] = vec3::rotate(normals[i],C,D);
     }
 
     
     for(int i = 0; i < 6; i++)
     {
-        dotproducts[i] = dot_product(rotatedNormals[i],lightSourceSecond);
+        dotproducts[i] = vec3::dot_product(rotatedNormals[i],lightSourceSecond);
     }
 
     
@@ -314,13 +307,16 @@ void Scene3::render_frame(double A, double B,double C,double D)
         {
             for(int j = 0; j < pointDensity; j++)
             {
-                vec3 rotated = rotate(pointsSecond[side][i][j],C,D);
-                double x=rotated.x + xDif, y=rotated.y, z=rotated.z + K2;
+                vec3 rotated = vec3::rotate(pointsSecond[side][i][j],C,D);
+                double x=rotated.x, y=rotated.y, z=rotated.z + K2;
 
                 double ooz = 1.0/z; //one over z
 
                 int xp = (int) (screen_width/2 + K1*ooz*x);
                 int yp = (int) (screen_height/2 + K1*ooz*y);
+
+                xp = projection2 + 2 * (projection2 - xp);
+                xp += xDif;
 
                 if (xp >= 0 && yp >= 0 && xp < screen_width && yp < screen_height)
                 {
@@ -328,6 +324,11 @@ void Scene3::render_frame(double A, double B,double C,double D)
                     {
                         output[yp][xp] = lightstring[(int)(L * 11)];
                         zbuffer[yp][xp] = ooz;
+                    }
+                    if (zbuffer[yp][xp+1] < ooz)
+                    {
+                        output[yp][xp+1] = lightstring[(int)(L * 11)];
+                        zbuffer[yp][xp+1] = ooz;
                     }
                 }
                 
@@ -351,19 +352,4 @@ void Scene3::render_frame(double A, double B,double C,double D)
     }
 }
 
-
-
-vec3 Scene3::rotate(vec3& p, double A, double B)
-{
-    //{{cosB,-sinB,0},{sinB,cosB,0},{0,0,1}}*{{1,0,0},{0,cosA,-sinA},{0,sinA,cosA}}*{{x},{y},{z}}
-    double cosA = cos(A), sinA = sin(A);
-    double cosB = cos(B), sinB = sin(B);
-
-    double x = p.x,y=p.y,z=p.z;
-    double newx = -y*cosA*sinB+z*sinA*sinB+x*cosB;
-    double newy = y*cosA*cosB-z*sinA*cosB+x*sinB;
-    double newz = y*sinA+z*cosA;
-
-    return vec3(newx,newy,newz);
-}
 

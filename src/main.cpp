@@ -52,12 +52,65 @@ int main()
     else if(input == '5')
     {
         Scene5 scene5;
-        scene5.loadOff(Path);
+        cout << "\n1-weirdSphere.off\n";
+        cout << "2-centaur.off\n";
+        cout << "3-man.off\n";
+        cout << "4-man2.off\n";
+        cout << "5-woman.off\n";
+        cout << "6-cat.off\n";
+        cout << "7-gorilla.off\n";
+        cout << "8-man3.off\n";
+        cout << "9-man4.off\n";
+        cout << "10-horse2.off\n";
+        cout << "11-neptune.off\n";
+        cout << "12-teapot.off\n";
+        cout << "Type a number:";
+        int offName;
+        cin >> offName;
+        switch (offName)
+        {
+        case 1:
+            scene5.loadOff(OffPath "weirdSphere.off",70); 
+            break;
+        case 2:
+            scene5.loadOff(OffPath "centaur.off",16);
+            break;
+        case 3:
+            scene5.loadOff(OffPath "man.off",16);
+            break;
+        case 4:
+            scene5.loadOff(OffPath "man2.off",16);
+            break;
+        case 5:
+            scene5.loadOff(OffPath "woman.off",12);
+            break;
+        case 6:
+            scene5.loadOff(OffPath "cat.off",16); 
+            break;
+        case 7:
+            scene5.loadOff(OffPath "gorilla.off",16); 
+            break;
+        case 8:
+            scene5.loadOff(OffPath "man3.off",16);
+            break;
+        case 9:
+            scene5.loadOff(OffPath "man4.off",16);
+            break;
+        case 10:
+            scene5.loadOff(OffPath "horse2.off",16);
+            break;
+        case 11:
+            scene5.loadOff(OffPath "neptune.off",16);
+            break;
+        case 12:
+            scene5.loadOff(OffPath "teapot.off",24);
+            break;
+        default:
+            return -1;
+        }
         scene5.start();
     }
 
-        
-    
     return 0;
 }
 void getDimensions()

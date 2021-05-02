@@ -74,3 +74,23 @@ vec3 vec3::cross_product(vec3 u, vec3 v)
     -(u.x*v.z-u.z*v.x),
     u.x*v.y-u.y*v.x);
 }
+
+double vec3::dot_product(vec3 u,vec3 v)
+{
+    return u.x*v.x + u.y*v.y + u.z*v.z;
+}
+
+
+vec3 vec3::rotate(vec3& p, double A, double B)
+{
+    //{{cosB,-sinB,0},{sinB,cosB,0},{0,0,1}}*{{1,0,0},{0,cosA,-sinA},{0,sinA,cosA}}*{{x},{y},{z}}
+    double cosA = cos(A), sinA = sin(A);
+    double cosB = cos(B), sinB = sin(B);
+
+    double x = p.x,y=p.y,z=p.z;
+    double newx = -y*cosA*sinB+z*sinA*sinB+x*cosB;
+    double newy = y*cosA*cosB-z*sinA*cosB+x*sinB;
+    double newz = y*sinA+z*cosA;
+
+    return vec3(newx,newy,newz);
+}
